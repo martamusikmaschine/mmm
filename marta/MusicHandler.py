@@ -88,23 +88,23 @@ class MusicHandler(MartaHandler):
         debug("tag=%s", tag)
         if tag is None:
             debug("tag removed.")
-            self.marta.player.pause()
+            self.marta.player.pause_track()
             self.marta.leds.fade_up_and_down(LEDStrip.RED)
-            self.save_state(self.marta.player.get_position())
+            self.save_state(self.marta.player.get_position_in_millis())
             self.expected_stop = True
-            self.marta.player.stop()
+            self.marta.player.stop_track()
             return MusicHandler.SHORT_TIMEOUT
         else:
             current_position = self.load_state(tag)
-            self.marta.player.load(self.all_songs[self.current_song_index])
+            self.marta.player.load_track_from_file(self.all_songs[self.current_song_index])
             if current_position != 0:
-                self.marta.player.set_position(current_position)
+                self.marta.player.set_position_in_millis(current_position)
 
             if len(self.all_songs) == 1:
                 self.marta.leds.fade_up_and_down(LEDStrip.GREEN)
             else:
                 self.marta.leds.song(self.current_song_index, len(self.all_songs))
-            self.marta.player.play()
+            self.marta.player.play_track()
             return MusicHandler.LONG_TIMEOUT
 
     def rotation_event(self, x, y):
@@ -131,27 +131,27 @@ class MusicHandler(MartaHandler):
             self.marta.leds.fade_up_and_down(LEDStrip.GREEN)
         else:
             self.marta.leds.song(self.current_song_index, len(self.all_songs))
-        self.marta.player.load(self.all_songs[self.current_song_index])
-        self.marta.player.play()
+        self.marta.player.load_track_from_file(self.all_songs[self.current_song_index])
+        self.marta.player.play_track()
 
     def button_event(self, pin):
         debug("pin: " + Buttons.BUTTONS_HUMAN_READABLE[str(pin)])
 
         if pin == Buttons.BLUE_BUTTON:
-            if not self.marta.player.is_playing():
+            if not self.marta.player.is_track_playing():
                 debug("ignore")
                 return
 
-            pos = self.marta.player.get_position()
+            pos = self.marta.player.get_position_in_millis()
             debug("pos=" + str(pos))
             if pos > 2000:
-                self.marta.player.set_position(0)
+                self.marta.player.set_position_in_millis(0)
             else:
                 self.expected_stop = True
-                self.marta.player.stop()
+                self.marta.player.stop_track()
                 self.current_song_index = (self.current_song_index - 1) % len(self.all_songs)
-                self.marta.player.load(self.all_songs[self.current_song_index])
-                self.marta.player.play()
+                self.marta.player.load_track_from_file(self.all_songs[self.current_song_index])
+                self.marta.player.play_track()
 
             if len(self.all_songs) == 1:
                 self.marta.leds.fade_up_and_down(LEDStrip.GREEN)
@@ -159,15 +159,15 @@ class MusicHandler(MartaHandler):
                 self.marta.leds.song(self.current_song_index, len(self.all_songs), forward=False)
 
         elif pin == Buttons.YELLOW_BUTTON:
-            if not self.marta.player.is_playing():
+            if not self.marta.player.is_track_playing():
                 debug("player is not playing. so ignore")
                 return
 
             self.expected_stop = True
-            self.marta.player.stop()
+            self.marta.player.stop_track()
             self.current_song_index = (self.current_song_index + 1) % len(self.all_songs)
-            self.marta.player.load(self.all_songs[self.current_song_index])
-            self.marta.player.play()
+            self.marta.player.load_track_from_file(self.all_songs[self.current_song_index])
+            self.marta.player.play_track()
 
             if len(self.all_songs) == 1:
                 self.marta.leds.fade_up_and_down(LEDStrip.GREEN)
@@ -201,6 +201,6 @@ class MusicHandler(MartaHandler):
     def uninitialize(self):
         debug("uninitialize")
         if self.current_tag_name is not None:
-            self.marta.player.pause()
-            self.save_state(self.marta.player.get_position())
-            self.marta.player.stop()
+            self.marta.player.pause_track()
+            self.save_state(self.marta.player.get_position_in_millis())
+            self.marta.player.stop_track()

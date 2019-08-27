@@ -74,18 +74,18 @@ class Marta(object):
 
         self.leds = LEDStrip()
 
-        self.player.load(Marta.START_SOUND_PATH)
+        self.player.load_track_from_file(Marta.START_SOUND_PATH)
         self.leds.startup()
-        self.player.play()
+        self.player.play_track()
 
         # hacky because MPG123Player is async
-        while not self.player.is_playing():
+        while not self.player.is_track_playing():
             sleep(0.05)
 
         # True = GPIO.HIGH = 1
         # False = GPIO.LOW = 0
         g = True
-        while self.player.is_playing():
+        while self.player.is_track_playing():
             Buttons.set_status_led(g)
             sleep(0.2)
             g = not g
@@ -192,8 +192,8 @@ class Marta(object):
         try:
             self.player.set_volume(Marta.SYSTEM_SOUND_VOLUME)
             self.player.set_pitch(100)
-            self.player.load(Marta.SHUTDOWN_SOUND_PATH)
-            self.player.play()
+            self.player.load_track_from_file(Marta.SHUTDOWN_SOUND_PATH)
+            self.player.play_track()
         except:
             pass
 
