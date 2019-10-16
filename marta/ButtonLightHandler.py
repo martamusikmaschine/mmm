@@ -23,7 +23,7 @@ class ButtonLightHandler(MartaHandler):
 
     #################
 
-    def button_event(self, pin):
+    def button_event(self, pin, millis):
         if pin == Buttons.BLUE_BUTTON:
             self.marta.leds.fade_up_and_down(LEDStrip.BLUE)
         elif pin == Buttons.RED_BUTTON:

@@ -294,26 +294,16 @@ class MPG123Player(object):
 
 
 def main():
-    from logging import DEBUG, Formatter, StreamHandler
-    from sys import stdout
     from time import sleep
+    from SetupLogging import setup_stdout_logging
+    setup_stdout_logging()
 
-    logger = getLogger('')
-    logger.setLevel(DEBUG)
-    formatter = Formatter("%(asctime)s.%(msecs)03d | %(name)s |    %(message)s", "%H:%M:%S")
-    stdout_handler = StreamHandler(stdout)
-    stdout_handler.setFormatter(formatter)
-    logger.addHandler(stdout_handler)
+    player = MPG123Player(lambda: debug("song stopped"), lambda: debug("error"), 50)
 
-    def on_stop():
-        debug("callback: song stopped")
+    debug("enter song file path")
+    mp3_path = raw_input()
 
-    def on_error():
-        debug("callback: error :-(")
-
-    player = MPG123Player(on_stop, on_error, 50)
-
-    mp3_path = raw_input("enter mp3 path: ")
+    debug("CTRL + C to interrupt")
 
     success = player.load_track_from_file(mp3_path)
 
@@ -327,8 +317,7 @@ def main():
         while True:
             sleep(.5)
             debug("position: " + str(player.get_position_in_millis()) + " ms")
-    except KeyboardInterrupt:
-        debug("keyboard interrupt")
+    except:
         pass
 
     player.terminate()

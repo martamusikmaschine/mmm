@@ -39,7 +39,9 @@ class LEDStrip(object):
     GREEN = Color(0, 255, 0)
     BLUE = Color(0, 0, 255)
     YELLOW = Color(255, 255, 0)
+    PURPLE = Color(255, 0, 255)
     WHITE = Color(255, 255, 255)
+    ORANGE = Color(0xFF, 0x8C, 0x00)
 
     _LEDS = range(_LED_COUNT)
     _VOLUME_LEDS = _LEDS[4:14]
@@ -228,13 +230,19 @@ class LEDStrip(object):
             pos -= 170
             return Color(0, pos * 3, 255 - pos * 3)
 
+    def set_brightness(self, brightness):
+        self._strip.setBrightness(brightness)
+
+    def get_brightness(self):
+        return self._strip.getBrightness()
+
     def _rainbow_cycle_animation(self):
         while True:
             for j in range(256):
                 for i in range(LEDStrip._LED_COUNT):
                     self._strip.setPixelColor(i, LEDStrip._wheel((int(i * 256 / LEDStrip._LED_COUNT) + j) & 255))
                     self._strip.show()
-    
+
                 self._sleep(0.02)
 
     def terminate(self):
@@ -251,3 +259,27 @@ class LEDStrip(object):
         self._strip.show()
 
         self._led_controller_thread = None
+
+
+################################################################
+
+def main():
+    from SetupLogging import setup_stdout_logging
+    setup_stdout_logging()
+
+    debug("see the beautiful lights")
+    debug("ENTER or CTRL + C to quit")
+
+    leds = LEDStrip()
+    leds.rainbow_demo()
+
+    try:
+        raw_input()
+    except:
+        pass
+
+    leds.terminate()
+
+
+if __name__ == "__main__":
+    main()

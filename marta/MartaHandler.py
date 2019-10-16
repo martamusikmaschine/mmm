@@ -19,5 +19,5 @@ class MartaHandler(object):
     def player_stop_event(self):
         return
 
-    def button_event(self, pin):
+    def button_event(self, pin, millis):
         return

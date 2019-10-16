@@ -1,8 +1,6 @@
 from logging import getLogger
 
-from LEDStrip import LEDStrip
 from MartaHandler import MartaHandler
-import Buttons
 
 debug = getLogger('RnbwHndler').debug
 

@@ -1,8 +1,7 @@
 from logging import getLogger
 from math import atan2, degrees, sqrt
-from time import sleep
 
-import smbus
+from smbus import SMBus
 from threading import Thread, Event
 
 # Power management registers
@@ -34,7 +33,7 @@ class MPU(object):
         self._threshold = threshold
         self._rotation_receiver = rotation_receiver
 
-        self._bus = smbus.SMBus(REVISION)
+        self._bus = SMBus(REVISION)
         self._bus.write_byte_data(ADDRESS, POWER_MANAGEMENT_1, 0)
 
         self._mpu_reader_thread = Thread(target=self._read_mpu)
@@ -130,25 +129,21 @@ class MPU(object):
 ################################################################
 
 def main():
-    from logging import getLogger, DEBUG, Formatter, StreamHandler
-    from sys import stdout
+    from SetupLogging import setup_stdout_logging
+    setup_stdout_logging()
 
-    def print_rot(x, y):
-        debug("rot=" + str(x) + ", " + str(y))
+    debug("tilt the device!")
+    debug("ENTER to start, ENTER or CTRL + C to quit")
+    raw_input()
 
-    log = getLogger('')
-    log.setLevel(DEBUG)
-
-    ch = StreamHandler(stdout)
-    ch.setFormatter(Formatter("%(asctime)s.%(msecs)03d | %(name)s |    %(message)s", "%H:%M:%S"))
-    log.addHandler(ch)
-
-    mpu = MPU(0.5, 0, print_rot)
+    mpu = MPU(0.5, 0, lambda x, y: debug("rot=" + str(x) + ", " + str(y)))
 
     try:
-        sleep(1000)
-    except KeyboardInterrupt:
-        mpu.terminate()
+        raw_input()
+    except:
+        pass
+
+    mpu.terminate()
 
 
 if __name__ == "__main__":
