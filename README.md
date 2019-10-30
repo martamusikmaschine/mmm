@@ -1,6 +1,6 @@
-# mmm
-Marta Musik Maschine Raspberry Pi Code
+# Marta Musik Maschine
+Before doing anything, checkout the associated blog post series at [martamusikmaschine.com](https://martamusikmaschine.com).
 
-## Just some test
+Marta Musik Maschine is a DIY, RFID enabled, multi-purpose, audio and light device for kids. It's open source and you can build one yourself. It's not hard at all, I promise.
 
-Initial commit from cmdline.
+This repository contains all the code needed on the Raspberry Pi, a KiCad project that enables you to etch/order a PCB and a few stl models that you can print on a 3D printer.
